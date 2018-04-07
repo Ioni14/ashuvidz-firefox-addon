@@ -14,7 +14,7 @@
                         browser.browserAction.setIcon({path: "images/offline.png"});
                         console.log("set icon offline");
 
-                        if (isLive == 0) return;
+                        if (isLive === 0) return;
 
                         browser.notifications.create('notifTwitchOnline', {
                             'type': 'basic',
@@ -51,10 +51,10 @@
             twitchCheck();
         });
 
-    }
-  function increment() {
-  browser.browserAction.setBadgeText({text: (13).toString()});
-}
+        function increment() {
+            browser.browserAction.setBadgeText({text: (13).toString()});
+        }
 
-increment();
+        increment()
+    }
 )();
