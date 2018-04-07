@@ -31,8 +31,7 @@
                         console.log("set icon online");
 
                         if (isLive == 1) return;
-
-                        browser.notifications.create('notifTwitchOffline', {
+                      browser.notifications.create('notifTwitchOffline', {
                             'type': 'basic',
                             'message': 'hi i am online, réveille toi ! ',
                             'title': 'here here here!!!'
@@ -53,4 +52,9 @@
         });
 
     }
+  function increment() {
+  browser.browserAction.setBadgeText({text: (13).toString()});
+}
+
+increment();
 )();
