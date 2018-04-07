@@ -7,20 +7,12 @@
     "48": "icons/icon-48.png",
     "96": "icons/icon-96.png"
   },
-  "content_scripts": [
-    {
-      "matches": ["*://*.mozilla.org/*"],
-      "js": ["jquery.min.js", "background.js"]
-    }
-  ],
   "background": {
     "scripts": ["jquery.min.js", "background.js"]
   },
   "homepage_url": "http://ashuvidz.com",
-
   "permissions": ["storage", "alarms"],
   "browser_action": {
-    "default_icon": "images/offline.png",
     "default_title": "Ashuvidz"
   }
 }
