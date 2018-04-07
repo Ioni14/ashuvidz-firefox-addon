@@ -1,20 +1,23 @@
 (
     () => {
-        var isLive = 0;
-        function twitchCheck(){
+        let isLive = 1;
+
+        function twitchCheck() {
             $.ajax({
                 url: "https://api.twitch.tv/helix/streams?user_login=ashuvidz",
-                headers: { "Client-ID": "yufsibfdh5gwli5nzdj01ceghc1ubv" },
+                headers: {"Client-ID": "yufsibfdh5gwli5nzdj01ceghc1ubv"},
                 type: "GET",
-                success: function() { console.log('Success!'); }
-            }).done(function( channel ) {
+                success: function () {
+                    console.log('Success!');
+                }
+            }).done(function (channel) {
 
-                    //live is offline Youtube player appened
                     if (channel.data.length <= 0) {
+                        //live is offline Youtube player appened
                         browser.browserAction.setIcon({path: "images/offline.png"});
                         console.log("set icon offline");
 
-                        if (isLive == 0) return;
+                        if (isLive === 0) return;
 
                         browser.notifications.create('notifTwitchOnline', {
                             'type': 'basic',
@@ -23,22 +26,19 @@
                         });
                         isLive = 0;
 
-
-                        //live is online Twitch player
                     } else {
-
+                        //live is online Twitch player
                         browser.browserAction.setIcon({path: "images/online.png"});
                         console.log("set icon online");
 
-                        if (isLive == 1) return;
+                        if (isLive === 1) return;
 
                         browser.notifications.create('notifTwitchOffline', {
                             'type': 'basic',
                             'message': 'hi i am online, réveille toi ! ',
-                            'title': 'here here here!!!'
+                            'title': 'ici ici !!!'
                         });
                         isLive = 1;
-
                     }
                 }
             );
