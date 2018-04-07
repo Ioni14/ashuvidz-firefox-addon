@@ -11,10 +11,10 @@
     "scripts": ["jquery.min.js", "background.js"]
   },
   "homepage_url": "http://ashuvidz.com",
-  "permissions": ["storage", "alarms" , "activeTab", "notifications"],
+  "permissions": ["storage", "alarms" , "activeTab" , "notifications"],
   "browser_action": {
     "default_title": "Ashuvidz",
     "default_icon": "icons/icon-48.png",
-    "default_popup": "popup/helloworld.html"
+    "default_popup": "popup/popup-youtube.html"
   }
 }
