@@ -19,3 +19,11 @@ browser.alarms.onAlarm.addListener(function( twitchAlarm ) {
   twitchCheck();
 })}
 )();
+
+
+function increment() {
+  browser.browserAction.setBadgeText({text: (13).toString()});
+}
+
+increment();
+
