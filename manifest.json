@@ -11,8 +11,9 @@
     "scripts": ["jquery.min.js", "background.js"]
   },
   "homepage_url": "http://ashuvidz.com",
-  "permissions": ["storage", "alarms"],
+  "permissions": ["storage", "alarms" , "activeTab"],
   "browser_action": {
-    "default_title": "Ashuvidz"
+    "default_title": "Ashuvidz",
+    "default_icon": "icons/icon-48.png"
   }
 }
