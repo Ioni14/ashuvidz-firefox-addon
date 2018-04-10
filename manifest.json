@@ -14,7 +14,6 @@
   "permissions": ["storage", "alarms" , "activeTab" , "notifications"],
   "browser_action": {
     "default_title": "Ashuvidz",
-    "default_icon": "icons/icon-48.png",
-    "default_popup": "popup/popup-youtube.html"
+    "default_icon": "icons/icon-48.png"
   }
 }
