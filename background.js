@@ -2,33 +2,19 @@
     () => {
 
         // Bootstraps the plugin.
-        function bootstrap(item) {
-
-            // For the first time running after install. Set the status at 0 for non live.
-            if (!item.isLive) {
-                browser.storage.local.set({
-                    isLive:  "0"
-                });
-
-                // To be sure that the variable is localy saved.
-                buffer = browser.storage.local.get('isLive');
-                buffer.then(bootstrap, onError);
-            } else {
-
-                buffer.then(twitchCheck)
-
-            }
-        }
 
         function linkManager(item) {
-            if (!item.linkUrl) {
+            if (!item.linkUrl || !item.isLive) {
                 browser.storage.local.set({
-                    linkUrl:  "https://youtube.com/ashuvidz/"
+                    linkUrl:  "https://youtube.com/ashuvidz/",
+                    isLive: "0"
                 });
-
-                // To be sure that the variable is localy saved.
-                linkUrl = browser.storage.local.get('linkUrl');
-                linkUrl.then(linkManager, onError);
+                local = item;
+                linkManager();
+            } else {
+                local = item;
+                console.log(local);
+                twitchCheck();
             }
         }
 
@@ -38,11 +24,13 @@
         }
 
         // This is the actual logic of the plugin.
-        function twitchCheck(item){
+        function twitchCheck(){
+            console.log(local);
 
             // We first get data from Twitch Using Helix API using new nodejs fetch methode
             // Setting the API Request to Twitch
             const twitchUrl = 'https://api.twitch.tv/helix/streams?user_login=jvtv';
+
             const twitchApiGetter = {
                 method: 'GET',
                 headers: { "Client-ID": "b90nfoacg9807542cq15o2qbv2g05q" }
@@ -54,24 +42,25 @@
                     //live is offline Youtube player appened
                     if (channel.data.length <= 0) {
 
-                        // If status didn't changed do Nothing
-                        if (item.isLive === '0') return;
-
                         // If status changed, change status back to not streaming and save it in local storage without notifications.
                         browser.browserAction.setIcon({path: "images/offline.png"});
+
+                        // If status didn't changed do Nothing
+                        if (local.isLive === '0') return;
 
                         browser.storage.local.set({
                             isLive:  "0",
                             linkUrl: "http://youtube.com/ashuvidz/"
                         });
-                        buffer = browser.storage.local.get('isLive')
+                        buffer = browser.storage.local.get();
+                        buffer.then(linkManager, onError);
 
                     } else {
 
-                        if (item.isLive === '1') return;
-
                         // If live, append the link to Twitch and change images
                         browser.browserAction.setIcon({path: "images/online.png"});
+
+                        if (local.isLive === '1') return;
 
                         // This sends a notification
                         // TODO: Insert a link so when clicking on notification it open live stream channel in a new tab.
@@ -86,7 +75,8 @@
                             isLive:  "1",
                             linkUrl: "http://twitch.tv/ashuvidz/"
                         });
-                        buffer = browser.storage.local.get('isLive')
+                        buffer = browser.storage.local.get();
+                        buffer.then(linkManager, onError);
 
                     }
                 }
@@ -94,11 +84,9 @@
         }
 
         // This starts the plugin by geeting the saved previous status.
-        // TODO: Get all localstorage in one Time. Utile than link open on click will be broken !
-        let linkUrl = browser.storage.local.get('linkUrl');
-        linkUrl.then(linkManager, onError);
-        let buffer = browser.storage.local.get('isLive');
-        buffer.then(bootstrap, onError);
+        let local;
+        let buffer = browser.storage.local.get();
+        buffer.then(linkManager, onError);
 
         // Borwser Event Listeners. This keep application running after bootstrap.
         // This create the delay that trigger a new check every minutes
@@ -112,8 +100,8 @@
         // This manager the behavior when plugin icon is clicked
         browser.browserAction.onClicked.addListener(() =>
         {
-            console.log(linkUrl);
-            browser.tabs.create({ url: linkUrl });
+            console.log(local.linkUrl);
+            browser.tabs.create({ url: local.linkUrl });
         });
 
         /*function increment() {
