@@ -29,6 +29,7 @@
             // Setting the API Request to Twitch
             const twitchUrl = `https://api.twitch.tv/helix/streams?user_login=${twitchUserName}`;
 
+
             const twitchApiGetter = {
                 method: 'GET',
                 headers: { "Client-ID": twitchApiKey }
@@ -60,29 +61,47 @@
 
                         if (local.isLive === '1') return;
 
-                        // This sends a notification
-                        // TODO: Insert a link so when clicking on notification it open live stream channel in a new tab.
-                        browser.notifications.create('notifTwitchOffline', {
-                            'type': 'basic',
-                            'title':'Ashuvidz est en live !',
-                            'message': 'hi i am online, réveille toi ! ',
-                            'iconUrl': 'https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-512.png'
-                        });
+                        const twitchGameUrl = 'https://api.twitch.tv/helix/games?id=' + channel.data[0].game_id;
 
-                        // Then update the local variable and get it again to ensure the promise is fired.
-                        browser.storage.local.set({
-                            isLive:  "1",
-                            linkUrl: `http://twitch.tv/${twitchUserName}/`
-                        });
-                        buffer = browser.storage.local.get();
-                        buffer.then(linkManager, onError);
+                        fetch(twitchGameUrl, twitchApiGetter).then(( response ) => {
+                            return response.json()}).then( (game)=> {
 
+                           if (game.data.length <= 0) {
+                               return;
+                           }
+
+                            let twitchGameName = game.data[0].name;
+                            const twitchUserUrl = 'https://api.twitch.tv/helix/users?login=' + twitchUserName;
+
+                            fetch(twitchUserUrl, twitchApiGetter).then(( response ) => {
+                                return response.json()}).then( (user)=> {
+
+                                if (user.data.length <= 0) {
+                                    return;
+                                }
+                                // This sends a notification
+
+                                browser.notifications.create('notifTwitchOffline', {
+                                    'type': 'basic',
+                                    'title': channel.data[0].title,
+                                    'message': `${twitchUserName} est en stream sur ${twitchGameName}`,
+                                    'iconUrl': user.data[0].profile_image_url
+                                });
+
+                                // Then update the local variable and get it again to ensure the promise is fired.
+                                browser.storage.local.set({
+                                    isLive: "1",
+                                    linkUrl: `http://twitch.tv/${twitchUserName}/`
+                                });
+                                buffer = browser.storage.local.get();
+                                buffer.then(linkManager, onError);
+                            })
+                        });
                     }
                 }
             );
         }
 
-        // TODO : This should be migrated in a config file
         const twitchApiKey = "b90nfoacg9807542cq15o2qbv2g05q";
         const twitchUserName = "ashuvidz";
 
@@ -103,7 +122,11 @@
         // This manager the behavior when plugin icon is clicked
         browser.browserAction.onClicked.addListener(() =>
         {
-            console.log(local.linkUrl);
+            browser.tabs.create({ url: local.linkUrl });
+        });
+
+        // This manage the onclick behavior over the notification.
+        browser.notifications.onClicked.addListener(() => {
             browser.tabs.create({ url: local.linkUrl });
         });
 
