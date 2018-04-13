@@ -40,14 +40,6 @@
         // This is the actual logic of the plugin.
         function twitchCheck(item){
 
-
-            // Old methode to fetch twitch api using Jquery lib
-            /*$.ajax({
-                url: "https://api.twitch.tv/helix/streams?user_login=ashuvidz",
-                headers: { "Client-ID": "b90nfoacg9807542cq15o2qbv2g05q" },
-                type: "GET"
-            }).done*/
-
             // We first get data from Twitch Using Helix API using new nodejs fetch methode
             // Setting the API Request to Twitch
             const twitchUrl = 'https://api.twitch.tv/helix/streams?user_login=jvtv';
@@ -102,6 +94,7 @@
         }
 
         // This starts the plugin by geeting the saved previous status.
+        // TODO: Get all localstorage in one Time. Utile than link open on click will be broken !
         let linkUrl = browser.storage.local.get('linkUrl');
         linkUrl.then(linkManager, onError);
         let buffer = browser.storage.local.get('isLive');
