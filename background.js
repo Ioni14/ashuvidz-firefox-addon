@@ -2,11 +2,10 @@
     () => {
 
         // Bootstraps the plugin.
-
         function linkManager(item) {
             if (!item.linkUrl || !item.isLive) {
                 browser.storage.local.set({
-                    linkUrl:  "https://youtube.com/ashuvidz/",
+                    linkUrl:  `https://youtube.com/${twitchUserName}/`,
                     isLive: "0"
                 });
                 local = item;
@@ -25,15 +24,14 @@
 
         // This is the actual logic of the plugin.
         function twitchCheck(){
-            console.log(local);
 
             // We first get data from Twitch Using Helix API using new nodejs fetch methode
             // Setting the API Request to Twitch
-            const twitchUrl = 'https://api.twitch.tv/helix/streams?user_login=jvtv';
+            const twitchUrl = `https://api.twitch.tv/helix/streams?user_login=${twitchUserName}`;
 
             const twitchApiGetter = {
                 method: 'GET',
-                headers: { "Client-ID": "b90nfoacg9807542cq15o2qbv2g05q" }
+                headers: { "Client-ID": twitchApiKey }
             };
 
             // Fetching data from twitch API
@@ -50,7 +48,7 @@
 
                         browser.storage.local.set({
                             isLive:  "0",
-                            linkUrl: "http://youtube.com/ashuvidz/"
+                            linkUrl: `https://youtube.com/${twitchUserName}/`
                         });
                         buffer = browser.storage.local.get();
                         buffer.then(linkManager, onError);
@@ -66,14 +64,15 @@
                         // TODO: Insert a link so when clicking on notification it open live stream channel in a new tab.
                         browser.notifications.create('notifTwitchOffline', {
                             'type': 'basic',
+                            'title':'Ashuvidz est en live !',
                             'message': 'hi i am online, réveille toi ! ',
-                            'title': 'here here here!!!'
+                            'iconUrl': 'https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-512.png'
                         });
 
                         // Then update the local variable and get it again to ensure the promise is fired.
                         browser.storage.local.set({
                             isLive:  "1",
-                            linkUrl: "http://twitch.tv/ashuvidz/"
+                            linkUrl: `http://twitch.tv/${twitchUserName}/`
                         });
                         buffer = browser.storage.local.get();
                         buffer.then(linkManager, onError);
@@ -82,6 +81,10 @@
                 }
             );
         }
+
+        // TODO : This should be migrated in a config file
+        const twitchApiKey = "b90nfoacg9807542cq15o2qbv2g05q";
+        const twitchUserName = "ashuvidz";
 
         // This starts the plugin by geeting the saved previous status.
         let local;
