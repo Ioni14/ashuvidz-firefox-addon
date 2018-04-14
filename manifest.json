@@ -1,16 +1,17 @@
 {
   "manifest_version": 2,
-  "name": "Ashuvidz Chrome Extension",
-  "version": "0.1.0",
+  "name": "Ashuvidz Firefox Extension",
+  "version": "2.0.0",
   "description": "C'est une extension qui permet d'être notifié quand Ashuvidz est en live",
   "icons": {
     "48": "icons/icon-48.png",
     "96": "icons/icon-96.png"
   },
+  "default_locale": "fr",
   "background": {
     "scripts": ["background.js"]
   },
-  "homepage_url": "http://ashuvidz.com",
+  "homepage_url": "https://ashuvidz.com",
   "permissions": ["storage", "alarms" , "activeTab" , "notifications"],
   "browser_action": {
     "default_title": "Ashuvidz",
