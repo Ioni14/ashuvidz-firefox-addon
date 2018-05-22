@@ -139,4 +139,4 @@ class TwitchNotifier
     }
 }
 
-(new TwitchNotifier('b90nfoacg9807542cq15o2qbv2g05q', 'celumnis')).init();
+(new TwitchNotifier('b90nfoacg9807542cq15o2qbv2g05q', 'ashuvidz')).init();
